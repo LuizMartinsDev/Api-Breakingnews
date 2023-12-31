@@ -1,9 +1,9 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const userRoute = require("./src/routes/user.route")
+const port = 3500
 
-app.get('/teste', (req, res) => {
-  res.send('Hello World!')
-})
+app.use('/hello', userRoute)
+
 
 app.listen(port)
