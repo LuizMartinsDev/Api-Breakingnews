@@ -1,8 +1,11 @@
-const express = require('express');
-const userRouter = require('./src/routes/user.route.js');
+import express from 'express';
+import userRouter from './src/routes/user.route.js';
+
 const app = express();
 const porta = 3200;
 
-app.use('/', userRouter)
+app.use(express.json());
 
-app.listen(porta)
+app.use('/user', userRouter)
+
+app.listen(porta, () => console.log(`Servidor rodando na porta ${porta}`))

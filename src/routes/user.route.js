@@ -1,5 +1,7 @@
-const rota = require('express').Router();
-const userController = require('../controllers/user.controller')
-rota.get('/', userController.soma)
+import express from 'express'
+import {create} from '../controllers/user.controller.js'
 
-module.exports = rota;
+const router = express.Router();
+router.post('/', create)
+
+export default router;
