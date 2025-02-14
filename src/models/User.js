@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import bcryptjs from 'bcryptjs'
+import bcryptjs from 'bcryptjs';
 
 
 

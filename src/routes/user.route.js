@@ -1,7 +1,7 @@
-import express from 'express'
+import {Router} from 'express'
 import {create, findAllUsers, findByIdUser, updateUser} from '../controllers/user.controller.js'
 import {validId, validUser} from '../middlewares/global.middlewares.js'
-const router = express.Router();
+const router = Router();
 router.post('/', create)
 router.get('/', findAllUsers)
 router.get('/:id', validId, validUser, findByIdUser)
