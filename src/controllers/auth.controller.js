@@ -1,4 +1,4 @@
-import {authService} from '../services/auth.service.js';
+import {authService, generateToken} from '../services/auth.service.js';
 import bcryptjs from 'bcryptjs'
 
 export const login = async (req, res) => {
@@ -15,5 +15,7 @@ export const login = async (req, res) => {
 		return res.status(400).send({message: "access denied"})
 	}	
 
-    res.send("Login ok")
+    const token = generateToken(user.id)
+
+    res.send({token})
 }
