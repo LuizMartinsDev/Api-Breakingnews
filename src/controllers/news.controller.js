@@ -1,4 +1,4 @@
-import {createNewsInDb, findAllNewsInDb, countNews} from '../services/news.service.js';
+import {createNewsInDb, findAllNewsInDb, countNews, findTopNewsInDb, findByIdNewsInDb} from '../services/news.service.js';
 
 export const create = async (req, res) => {
 
@@ -101,4 +101,60 @@ export const findAllNews = async (req, res) => {
         res.status(500).send({message: err.message})
     }
 
+}
+
+export const findByIdNews = async (req, res) => {
+
+    try {
+        const id = req.params.id;
+
+        const news = await findByIdNewsInDb(id);
+
+        res.status(200).send(
+            {
+                id: news._id,
+                title: news.title,
+                text: news.text,
+                banner: news.banner,
+                likes: news.likes,
+                comments: news.comments,
+                name: news.user.name,
+                userName: news.user.username,
+                avatar: news.user.avatar
+        }
+        )
+
+    } catch(err){
+        res.status(500).send({message: err.message})
+    }
+    
+}
+
+export const findTopNews = async (req, res) => {
+
+    try {
+        const news = await findTopNewsInDb();
+
+        if(!news){
+            return  res.status(400).send({message: "There are no registered top news"})
+        }
+
+        res.status(200).send(
+        {
+                id: news._id,
+                title: news.title,
+                text: news.text,
+                banner: news.banner,
+                likes: news.likes,
+                comments: news.comments,
+                name: news.user.name,
+                userName: news.user.username,
+                avatar: news.user.avatar
+        }
+        )
+
+    } catch(err){
+        res.status(500).send({message: err.message})
+    }
+ 
 }
