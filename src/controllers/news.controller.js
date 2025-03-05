@@ -1,4 +1,14 @@
-import {createNewsInDb, findAllNewsInDb, countNews, findTopNewsInDb, findByIdNewsInDb, searchNewsByTitleInDb, findByUserInDb} from '../services/news.service.js';
+import {
+    createNewsInDb, 
+    findAllNewsInDb, 
+    countNews, 
+    findTopNewsInDb, 
+    findByIdNewsInDb, 
+    searchNewsByTitleInDb, 
+    findByUserInDb, 
+    updateNewsinDb,
+    deleteNewsInDb
+} from '../services/news.service.js';
 
 export const create = async (req, res) => {
 
@@ -190,6 +200,56 @@ export const findNewsByUser = async (req, res) => {
         res.status(500).send({message: err.message})
     }
 
+}
+
+export const update = async (req, res) => {
+
+    try{
+       
+        const {title, text, banner} = req.body;
+        const {id} = req.params;
+        console.log('sdiaslksalkdn',id)
+
+        if(!title && !text && !banner){
+            res.status(400).send({message: "Submit all fields for registration"})
+        }
+        const news = await findByIdNewsInDb(id);
+
+        console.log('aasfasfasf', id)
+
+        if(news.user._id != req.userId){
+            res.status(400).send({message: "You didn't update this post"})
+        }
+
+        await updateNewsinDb(id, title, text, banner);
+
+        return res.status(200).send({message: "Post successfully updated!"})
+    } catch(err){
+        res.status(500).send({message: err.message})
+    }
+    
+}
+
+export const deleteNews = async (req, res) => {
+    try{
+       
+        const {id} = req.params;
+
+        if(!id){
+            res.status(400).send({message: "Submit all fields for registration"})
+        }
+        const news = await findByIdNewsInDb(id);
+
+        if(news.user._id != req.userId){
+            res.status(400).send({message: "You didn't delete this post"})
+        }
+
+        await deleteNewsInDb(id);
+
+        return res.status(200).send({message: "News deleted successfully!"})
+    } catch(err){
+        res.status(500).send({message: err.message})
+    }
 }
 
 export const findTopNews = async (req, res) => {
