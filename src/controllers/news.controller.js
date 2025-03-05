@@ -1,4 +1,4 @@
-import {createNewsInDb, findAllNewsInDb, countNews, findTopNewsInDb, findByIdNewsInDb} from '../services/news.service.js';
+import {createNewsInDb, findAllNewsInDb, countNews, findTopNewsInDb, findByIdNewsInDb, searchNewsByTitleInDb, findByUserInDb} from '../services/news.service.js';
 
 export const create = async (req, res) => {
 
@@ -121,13 +121,75 @@ export const findByIdNews = async (req, res) => {
                 name: news.user.name,
                 userName: news.user.username,
                 avatar: news.user.avatar
-        }
+            }
         )
 
     } catch(err){
         res.status(500).send({message: err.message})
     }
     
+}
+
+export const searchNewsByTitle = async (req, res) => {
+    try{
+        const {title} = req.query;
+
+        console.log(title)
+
+        const news = await searchNewsByTitleInDb(title);
+
+
+        if(news.length === 0){
+            return res.status(400).send({ message: 'there are no news with this title'})
+        }
+
+        res.status(200).send(
+            {
+                results : news.map(newsItem => ({
+                    id: newsItem._id,
+                    title: newsItem.title,
+                    text: newsItem.text,
+                    banner: newsItem.banner,
+                    likes: newsItem.likes,
+                    comments: newsItem.comments,
+                    name: newsItem.user.name,
+                    userName: newsItem.user.username,
+                    avatar: newsItem.user.avatar
+                }))
+            }
+        )
+
+    } catch(err){
+        res.status(500).send({message: err.message})
+    }
+}
+
+export const findNewsByUser = async (req, res) => {
+
+    try{
+        const id = req.userId;
+        const news = await findByUserInDb(id);
+
+        res.status(200).send(
+            {
+                results : news.map(newsItem => ({
+                    id: newsItem._id,
+                    title: newsItem.title,
+                    text: newsItem.text,
+                    banner: newsItem.banner,
+                    likes: newsItem.likes,
+                    comments: newsItem.comments,
+                    name: newsItem.user.name,
+                    userName: newsItem.user.username,
+                    avatar: newsItem.user.avatar
+                }))
+            }
+        )
+
+    }catch(err){
+        res.status(500).send({message: err.message})
+    }
+
 }
 
 export const findTopNews = async (req, res) => {
